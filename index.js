@@ -1,5 +1,15 @@
 
 /**
+ * Module dependencies.
+ */
+
+try {
+  var Emitter = require('emitter');
+} catch (e) {
+  var Emitter = require('component-emitter');
+}
+
+/**
  * Make `obj` configurable.
  *
  * @param {Object} obj
@@ -8,6 +18,12 @@
  */
 
 module.exports = function(obj){
+
+  /**
+   * Mixin `Emitter`.
+   */
+
+  Emitter(obj);
 
   /**
    * Mixin settings.
@@ -25,13 +41,24 @@ module.exports = function(obj){
    * @api public
    */
 
-  obj.set = function(name, val){
+  obj.set = function(name, val, opts){
+    opts = opts || {};
+    opts.silent = (opts.silent === true)
+
     if (1 == arguments.length) {
       for (var key in name) {
-        this.set(key, name[key]);
+        this.set(key, name[key], { silent: true });
+        if (!opts.silent) this.emit('set:' + key, name[key]);
       }
+      if (!opts.silent) this.emit('set', name);
     } else {
       this.settings[name] = val;
+      var obj = {};
+      obj[name] = val;
+      if (!opts.silent) {
+        this.emit('set:' + name, val);
+        this.emit('set', obj);
+      }
     }
 
     return this;

@@ -4,7 +4,9 @@
   "description": "Configurable mixin",
   "version": "0.0.1",
   "keywords": ["config", "configuration", "mixin", "set", "get", "enable", "disable"],
-  "dependencies": {},
+  "dependencies": {
+    "component/emitter": "1.1.3"
+  },
   "development": {},
   "scripts": [
     "index.js"
